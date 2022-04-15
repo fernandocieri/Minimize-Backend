@@ -1,7 +1,7 @@
 const urlManager = require("../../managers/url");
 
 async function getShortenedUrl(req, res) {
-  const shortenedUrl = await urlManager.getShortenedUrl(req.params.originalUrl); 
+  const shortenedUrl = await urlManager.getShortenedUrl(req.query.originalUrl); 
 
   if (shortenedUrl) {
     res.status(200).json(shortenedUrl);
