@@ -24,21 +24,32 @@ class UrlManager {
     static async getOriginalUrl(customName, shortenedUrl) {
         try {
             const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
-            return urlInfo.originalUrl;
+            if (urlInfo) {
+                urlInfo.clicks++;
+                await urlInfo.save();
+                return urlInfo.originalUrl;
+            } else {
+                return null;
+            }
         } catch (error) {
             console.log(error);
         }
     }
 
     static async getUrlClicks(shortenedUrl) {
-        const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
-        return urlInfo.clicks;
+        try {
+            const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
+            return urlInfo.clicks;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     static async getShortenedUrl(originalUrl) {
         try {
             const urlInfo = await Url.findOne({ originalUrl: originalUrl });
-            return urlInfo.shortenedUrl;
+            const shortenedUrl = formatUrl(urlInfo.customName, urlInfo.shortenedUrl);
+            return shortenedUrl;
         } catch (error) {
             console.log(error);
         }

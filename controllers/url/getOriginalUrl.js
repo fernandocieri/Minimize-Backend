@@ -4,7 +4,7 @@ async function getOriginalUrl(req, res) {
   const originalUrl = await urlManager.getOriginalUrl(req.params.customName, req.params.shortenedUrl); 
 
   if (originalUrl) {
-    res.status(200).json(originalUrl);
+    res.redirect(originalUrl);
   } else res.status(404).end();
 }
 
