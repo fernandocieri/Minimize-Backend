@@ -45,15 +45,15 @@ class UrlManager {
         }
     }
 
-    static async getShortenedUrl(originalUrl) {
-        try {
-            const urlInfo = await Url.findOne({ originalUrl: originalUrl });
-            const shortenedUrl = formatUrl(urlInfo.customName, urlInfo.shortenedUrl);
-            return shortenedUrl;
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // static async getShortenedUrl(originalUrl) {
+    //     try {
+    //         const urlInfo = await Url.findOne({ originalUrl: originalUrl });
+    //         const shortenedUrl = formatUrl(urlInfo.customName, urlInfo.shortenedUrl);
+    //         return shortenedUrl;
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
     static async shortenUrl(customName = 'minimize', originalUrl) {
         try {
