@@ -55,9 +55,13 @@ class UrlManager {
         }
     }
 
-
-    static async shortenUrl(customName, originalUrl) {
+    static async shortenUrl(customName = 'minimize', originalUrl) {
         try {
+            const urlInfo = await Url.findOne({ originalUrl: originalUrl, customName: customName });
+            if (urlInfo) {
+                const shortenedUrl = formatUrl(urlInfo.customName, urlInfo.shortenedUrl);
+                return shortenedUrl;
+            }
             const createdUrlInfo = await Url.create({ originalUrl: originalUrl, customName: customName });
             const shortenedUrl = formatUrl(createdUrlInfo.customName, createdUrlInfo.shortenedUrl);
             return shortenedUrl;
