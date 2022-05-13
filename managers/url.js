@@ -6,7 +6,8 @@ mongoose.connect('mongodb://localhost/Minimize'), {
 }
 
 function formatUrl(customName, shortenedUrl) {
-    const newUrl = `http://localhost:3003/api/url/${customName}/${shortenedUrl}`;
+    const domain = 'http://localhost:3000/';
+    const newUrl = `${domain}${customName}/${shortenedUrl}`;
     return newUrl;
 }
 
@@ -21,7 +22,7 @@ class UrlManager {
         }
     }
 
-    static async getOriginalUrl(customName, shortenedUrl) {
+    static async getOriginalUrl(shortenedUrl) {
         try {
             const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
             if (urlInfo) {
@@ -44,16 +45,6 @@ class UrlManager {
             console.log(error);
         }
     }
-
-    // static async getShortenedUrl(originalUrl) {
-    //     try {
-    //         const urlInfo = await Url.findOne({ originalUrl: originalUrl });
-    //         const shortenedUrl = formatUrl(urlInfo.customName, urlInfo.shortenedUrl);
-    //         return shortenedUrl;
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
 
     static async shortenUrl(customName = 'minimize', originalUrl) {
         try {
