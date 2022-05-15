@@ -1,9 +1,4 @@
-const mongoose = require('mongoose');
 const Url = require('../models/url');
-
-mongoose.connect('mongodb://localhost/Minimize'), {
-    useNewUrlParser: true, useUnifiedTopology: true
-}
 
 function formatUrl(customName, shortenedUrl) {
     const domain = 'http://localhost:3000/';
@@ -18,7 +13,7 @@ class UrlManager {
             const urls = await Url.find();
             return urls;
         } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 
@@ -33,7 +28,7 @@ class UrlManager {
                 return null;
             }
         } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 
@@ -42,11 +37,11 @@ class UrlManager {
             const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
             return urlInfo.clicks;
         } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 
-    static async shortenUrl(customName = 'minimize', originalUrl) {
+    static async shortenUrl(customName = 'min', originalUrl) {
         try {
             const urlInfo = await Url.findOne({ originalUrl: originalUrl, customName: customName });
             if (urlInfo) {
@@ -57,7 +52,7 @@ class UrlManager {
             const shortenedUrl = formatUrl(createdUrlInfo.customName, createdUrlInfo.shortenedUrl);
             return shortenedUrl;
         } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 }
