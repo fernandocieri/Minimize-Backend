@@ -1,8 +1,7 @@
 const Url = require('../models/url');
 
 function formatUrl(customName, shortenedUrl) {
-    const domain = 'http://localhost:3000/';
-    const newUrl = `${domain}${customName}/${shortenedUrl}`;
+    const newUrl = `${process.env.FRONT_URL}/${customName}/${shortenedUrl}`;
     return newUrl;
 }
 
