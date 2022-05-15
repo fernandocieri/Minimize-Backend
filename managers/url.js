@@ -1,12 +1,7 @@
-const mongoose = require('mongoose');
 const Url = require('../models/url');
 
-mongoose.connect('mongodb://localhost/Minimize'), {
-    useNewUrlParser: true, useUnifiedTopology: true
-}
-
 function formatUrl(customName, shortenedUrl) {
-    const newUrl = `http://localhost:3003/api/${customName}/${shortenedUrl}`;
+    const newUrl = `${process.env.FRONT_URL}/${customName}/${shortenedUrl}`;
     return newUrl;
 }
 
@@ -17,35 +12,46 @@ class UrlManager {
             const urls = await Url.find();
             return urls;
         } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 
-    static async getOriginalUrl(customName, shortenedUrl) {
+    static async getOriginalUrl(shortenedUrl) {
         try {
-            const originalUrl = await Url.findOne({ shortenedUrl: shortenedUrl });
-            return originalUrl;
+            const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
+            if (urlInfo) {
+                urlInfo.clicks++;
+                await urlInfo.save();
+                return urlInfo.originalUrl;
+            } else {
+                return null;
+            }
         } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 
-    static async getShortenedUrl(originalUrl) {
+    static async getUrlClicks(shortenedUrl) {
         try {
-            const shortenedUrl = await Url.findOne({ originalUrl: originalUrl });
+            const urlInfo = await Url.findOne({ shortenedUrl: shortenedUrl });
+            return urlInfo.clicks;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    static async shortenUrl(customName = 'min', originalUrl) {
+        try {
+            const urlInfo = await Url.findOne({ originalUrl: originalUrl, customName: customName });
+            if (urlInfo) {
+                const shortenedUrl = formatUrl(urlInfo.customName, urlInfo.shortenedUrl);
+                return shortenedUrl;
+            }
+            const createdUrlInfo = await Url.create({ originalUrl: originalUrl, customName: customName });
+            const shortenedUrl = formatUrl(createdUrlInfo.customName, createdUrlInfo.shortenedUrl);
             return shortenedUrl;
         } catch (error) {
-            console.log(error);
-        }
-    }
-
-    static async shortenUrl(customName, originalUrl) {
-        try {
-            const response = await Url.create({ originalUrl: originalUrl, customName: customName });
-            const shortenedUrl = formatUrl(response.customName, response.shortenedUrl);
-            return shortenedUrl;
-        } catch (error) {
-            console.log(error);
+            return null;
         }
     }
 }

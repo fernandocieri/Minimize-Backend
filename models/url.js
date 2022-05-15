@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('../connection');
 const nanoid = require('nanoid');
 
 const url = new mongoose.Schema({
@@ -14,7 +14,7 @@ const url = new mongoose.Schema({
     customName: {
         type: String,
         required: true,
-        default: 'minimize'
+        default: 'min'
     },
     clicks: {
         type: Number,
